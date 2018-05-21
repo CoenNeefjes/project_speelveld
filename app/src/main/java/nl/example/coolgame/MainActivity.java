@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +29,9 @@ public class MainActivity extends Activity implements View.OnTouchListener{
 
     // Make a copy of the level
     private Bitmap[][][] boardCopy;
+
+    // Keep track of when the player is allowed to draw
+    boolean allowedToDraw = false;
 
     /** Called when the activity is first created. */
     @Override
@@ -104,22 +108,33 @@ public class MainActivity extends Activity implements View.OnTouchListener{
         int action = motionEvent.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                Point touchedPoint = gameView.getTouchedTilePosition(motionEvent);
                 // Make a copy of the board for resetting purposes
                 boardCopy = gameView.getGridCopy();
-                // Set values of starting position
-                gameView.setInitialTouch(motionEvent);
-                //TODO: Check if we started on starting tile
+                // Check if we started drawing on the start tile
+                if (touchedPoint.x == 0 && touchedPoint.y == 0){
+                    // Set values of starting position
+                    gameView.setInitialTouch(motionEvent);
+                    // Make sure the player can draw
+                    allowedToDraw = true;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (!gameView.drawLine(motionEvent, paint)){
-                    // Reset line when drawn over a wall
-                    gameView.setGrid(boardCopy);
+                if (allowedToDraw){
+                    if (!gameView.drawLine(motionEvent, paint)){
+                        // Reset line when drawn over a wall
+                        gameView.setGrid(boardCopy);
+                        // Make sure the player cant draw anymore
+                        allowedToDraw = false;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 //TODO: Check if we let go on the ending tile, then we won
                 // Reset line
                 gameView.setGrid(boardCopy);
+                // Make sure the player can only draw when the start tile is first touched
+                allowedToDraw = false;
                 break;
             case MotionEvent.ACTION_CANCEL:
                 break;

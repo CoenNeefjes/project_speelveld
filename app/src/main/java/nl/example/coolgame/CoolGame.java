@@ -1,9 +1,12 @@
 package nl.example.coolgame;
 
+import android.graphics.Point;
+
 import nl.example.coolgame.MazeGenerator.DepthFirst;
 import nl.example.coolgame.MazeGenerator.Kruskal;
 import nl.example.coolgame.MazeGenerator.Prim;
 import nl.example.coolgame.MazeGenerator.RecursiveDivision;
+import nl.example.coolgame.mazeSolver.BreadthFirst;
 import nl.saxion.act.playground.model.Game;
 import nl.saxion.act.playground.model.GameBoard;
 import nl.example.coolgame.objects.Leaf;
@@ -51,9 +54,11 @@ public class CoolGame extends Game {
 		score = 0;
 		activity.updateScoreLabel(score);
 
+		// Create a gameboard
 		GameBoard board = getGameBoard();
 		board.removeAllObjects();
 
+		// Fill the board using an algorithm
 		DepthFirst depthFirst = new DepthFirst(board);
 		depthFirst.generateMaze();
 
@@ -66,22 +71,13 @@ public class CoolGame extends Game {
 //		RecursiveDivision recursiveDivision = new RecursiveDivision(board);
 //		recursiveDivision.generateMaze();
 
-		// Add a player object
-//		board.addGameObject(new Wombat(), 0, 5);
+		// Set the starting tile
+		//TODO: set the starting tile
 
-		// Add some rocks
-//		board.addGameObject(new Rock(false), 3, 3);
-//		board.addGameObject(new Rock(false), 2, 7);
-//		board.addGameObject(new Rock(true),  8, 5);
-//		board.addGameObject(new Rock(true),  1, 4);
-//		board.addGameObject(new Rock(false), 6, 10);
-
-		// Add some leafs
-//		board.addGameObject(new Leaf(), 7, 7);
-//		board.addGameObject(new Leaf(), 9, 5);
-//		board.addGameObject(new Leaf(), 3, 6);
-//		board.addGameObject(new Leaf(), 4, 7);
-//		board.addGameObject(new Leaf(), 1, 9);
+		// Set the end tile
+		BreadthFirst breadthFirst = new BreadthFirst(board);
+		Point endTilePoint = breadthFirst.getLargestValueWallPoint();
+		//TODO: set the end tile
 
 		// Redraw the game view
 		board.updateView();

@@ -210,7 +210,7 @@ public abstract class GameBoardView extends View implements Observer {
 		return super.onTouchEvent(event);
 	}
 
-	// Made this myself
+	// Added to the framework
 	private int previousTileX = -1;
 	private int previousTileY = -1;
 	public void setInitialTouch(MotionEvent event){
@@ -221,48 +221,54 @@ public abstract class GameBoardView extends View implements Observer {
 		}
 	}
 
-	// Made this myself
+	// Added to the framework
 	public boolean drawLine(MotionEvent event, Paint paint){
 		// Get the coordinates of the point touched
 		Point touchedTilePoint = getTouchedTilePosition(event);
 		Point touchedPoint = getTouchedPosition(event);
 		// Check if point was on the board
 		if (touchedTilePoint.x >= 0 && touchedTilePoint.y >= 0){
+			// Get an instance of the previous touched tile
+			Wall wall = (Wall) board.getObject(previousTileX, previousTileY);
 			// Check if we went a tile right
-			if (previousTileX - touchedTilePoint.x == -1){
-				Wall wall = (Wall) board.getObject(previousTileX, previousTileY);
+			if (previousTileX - touchedTilePoint.x == -1 && previousTileY == touchedTilePoint.y){
 				// Check if we were blocked by a wall
 				if (wall.hasWall("right")){
+					previousTileX = touchedTilePoint.x;
+					previousTileY = touchedTilePoint.y;
 					return false;
 				}
 			}
 			// Check if we went a tile left
-			if (previousTileX - touchedTilePoint.x == 1){
-				Wall wall = (Wall) board.getObject(previousTileX, previousTileY);
+			if (previousTileX - touchedTilePoint.x == 1 && previousTileY == touchedTilePoint.y){
 				// Check if we were blocked by a wall
 				if (wall.hasWall("left")){
+					previousTileX = touchedTilePoint.x;
+					previousTileY = touchedTilePoint.y;
 					return false;
 				}
 			}
 			// Check if we went a tile up
-			if (previousTileY - touchedTilePoint.y == 1){
-				Wall wall = (Wall) board.getObject(previousTileX, previousTileY);
+			if (previousTileY - touchedTilePoint.y == 1 && previousTileX == touchedTilePoint.x){
 				// Check if we were blocked by a wall
 				if (wall.hasWall("up")){
+					previousTileX = touchedTilePoint.x;
+					previousTileY = touchedTilePoint.y;
 					return false;
 				}
 			}
 			// Check if we went a tile down
-			if (previousTileY - touchedTilePoint.y == -1){
-				Wall wall = (Wall) board.getObject(previousTileX, previousTileY);
+			if (previousTileY - touchedTilePoint.y == -1 && previousTileX == touchedTilePoint.x){
 				// Check if we were blocked by a wall
 				if (wall.hasWall("down")){
+					previousTileX = touchedTilePoint.x;
+					previousTileY = touchedTilePoint.y;
 					return false;
 				}
 			}
 			// Print info of touch
-			System.out.println("Touched tile on x=" + touchedTilePoint.x + " y=" + touchedTilePoint.y);
-			System.out.println("Touched game coordinates on x=" + touchedPoint.x + " y=" + touchedPoint.y);
+//			System.out.println("Touched tile on x=" + touchedTilePoint.x + " y=" + touchedTilePoint.y);
+//			System.out.println("Touched game coordinates on x=" + touchedPoint.x + " y=" + touchedPoint.y);
 			// Get the bitmap of the touched object
 			Bitmap bitmap = mTileGrid[touchedTilePoint.x][touchedTilePoint.y][1];
 			Bitmap copy = bitmap.copy(bitmap.getConfig(), true);
@@ -279,13 +285,13 @@ public abstract class GameBoardView extends View implements Observer {
 		return true;
 	}
 
-	// Made this myself
+	// Added to the framework
 	public void setGrid(Bitmap[][][] grid){
 		mTileGrid = grid;
 		invalidate();
 	}
 
-	// Made this myself
+	// Added to the framework
 	public Bitmap[][][] getGridCopy(){
 		Bitmap[][][] copy = new Bitmap[tileCountX][tileCountY][NUM_BITMAP_LAYERS];
 		for (int x = 0; x < tileCountX; x++) {
@@ -297,15 +303,15 @@ public abstract class GameBoardView extends View implements Observer {
 		return copy;
 	}
 
-	// Made this myself
+	// Added to the framework
 	private Point getTouchedPosition(MotionEvent event){
 		int x = (int) (event.getX() - borderSizeX);
 		int y = (int) (event.getY() - borderSizeY);
 		return new Point(x, y);
 	}
 
-	// Made this myself
-	private Point getTouchedTilePosition(MotionEvent event){
+	// Added to the framework
+	public Point getTouchedTilePosition(MotionEvent event){
 		int x = (int) ((event.getX() - borderSizeX) / mTileSize);
 		int y = (int) ((event.getY() - borderSizeY) / mTileSize);
 		int mx = x + modelOffsetX;

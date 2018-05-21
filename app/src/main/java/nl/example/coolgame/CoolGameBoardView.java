@@ -75,9 +75,4 @@ public class CoolGameBoardView extends GameBoardView {
 		spriteCache.loadTile(Wall.WALL_IMAGE_LEFT_UP_RIGHT, R.drawable.wallleftupright);
 		spriteCache.loadTile(Wall.WALL_IMAGE_UP_RIGHT_Down, R.drawable.walluprightdown);
 	}
-
-	// Return the spriteCache
-	public SpriteCache getSpriteCache(){
-		return spriteCache;
-	}
 }
