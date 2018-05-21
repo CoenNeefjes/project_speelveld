@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Playground Demo</string>
+    <string name="newgame">New Game</string>
+    <string name="score">Score: </string>
+</resources>
